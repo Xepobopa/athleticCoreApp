@@ -2,7 +2,7 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import React from 'react';
 
 import { Colors } from '@/constants/theme';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
@@ -13,7 +13,7 @@ export default function TabLayout() {
           <NativeTabs.Trigger.Icon sf={'fork.knife'} />
           <NativeTabs.Trigger.Label>Diary</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name='calendar'>
+        <NativeTabs.Trigger name='(calendar)'>
           <NativeTabs.Trigger.Icon sf={'calendar'}/>
           <NativeTabs.Trigger.Label>Calendar</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>

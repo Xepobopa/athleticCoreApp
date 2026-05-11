@@ -2,6 +2,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const KEY_USERS = 'users';
 const KEY_AUTHED_USER = 'authed_user';
+export type GoalType = 'muscle' | 'fat_loss' | 'fit';
+
+export type Calories = {
+    kcal: number,
+    fat: number,
+    protein: number,
+    carb: number
+}
+
+export type kcalCalendarType = {
+    date: Date,
+    value: Calories
+}
 
 export interface User {
     id: string;
@@ -10,18 +23,19 @@ export interface User {
     password: string;
 
     weight: number;
-    weightTarget: number;
-    fat: number;
-    fatTarget: number;
+    height: number;
+    age: number;
 
-
-    goal: 'muscle' | 'fat_loss';
+    goal: GoalType;
     iconUrl: string;
+
+    kcalPerDay: Calories;
+    kcalCalendar: number[]
 }
 
 const mockUsers: User[] = [
-    {id: "1", name: "Mike Mentzer", email: "mike@example.com", password: "mike", goal: "muscle", iconUrl: "https://thebarbell.com/wp-content/uploads/2023/02/Mike-Mentzer-workout-4.jpg", weight: 70, weightTarget: 100, fat: 15, fatTarget: 10},
-    {id: "2", name: "Tom Platz", email: "tom@example.com", password: "tom", goal: "fat_loss", iconUrl: "https://media.themoviedb.org/t/p/w440_and_h660_face/tq3rbYYrmBu1KT1MQhmRVUHwUQH.jpg", weight: 105, weightTarget: 67, fat: 31, fatTarget: 12},
+    {id: "1", name: "Mike Mentzer", email: "mike@example.com", password: "mike", goal: "muscle", iconUrl: "https://thebarbell.com/wp-content/uploads/2023/02/Mike-Mentzer-workout-4.jpg", weight: 70, height: 175, age: 23},
+    {id: "2", name: "Tom Platz", email: "tom@example.com", password: "tom", goal: "fat_loss", iconUrl: "https://media.themoviedb.org/t/p/w440_and_h660_face/tq3rbYYrmBu1KT1MQhmRVUHwUQH.jpg", weight: 105, height: 180, age: 25},
 ]
 
 // one time add mock users to the storage
@@ -47,16 +61,16 @@ export async function AddUser(user: User) {
     await AsyncStorage.setItem(KEY_USERS, JSON.stringify(users));
 }
 
-export async function UpdateUser(user: User): Promise<boolean> {
+export async function UpdateUser(user: User): Promise<User | null> {
     const users = await GetAllUsers();
     const index = users.findIndex(u => u.id === user.id);
     if (index !== -1) {
         users[index] = user;
         await AsyncStorage.setItem(KEY_USERS, JSON.stringify(users));
-        return true;
+        return user;
     } else {
         console.log('User not found for update', user);
-        return false;
+        return null;
     }
 }
 

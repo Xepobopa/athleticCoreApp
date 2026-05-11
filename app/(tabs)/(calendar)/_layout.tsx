@@ -7,7 +7,7 @@ export default function ProfileLayout() {
         <Stack screenOptions={{ ...DEFAULT_HEADER_OPTIONS }}>
             <Stack.Screen name="index" />
             <Stack.Screen 
-                name="settings" 
+                name="details" 
                 options={{ headerLeft: () => <BackButton /> }}    
                 />
         </Stack>

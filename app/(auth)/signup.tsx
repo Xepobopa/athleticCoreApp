@@ -42,7 +42,7 @@ export default function SignUp() {
 
     try {
           await register(email, password);
-          router.replace('/(tabs)');
+          router.replace('/(auth)/onboarding-personal');
         } catch (error) {
           // show error somehow
           setEmailWarning(true);

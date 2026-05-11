@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { router } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import React from "react";
-import { ActivityIndicator, ColorValue, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { styles } from "./styles";
 
@@ -16,6 +16,10 @@ export default function ProfileTab() {
     const handleLogout = () => {
         logout();
         router.replace('/(auth)/login');
+    }
+
+    const handleSettings = () => {
+        router.push('/(tabs)/(profile)/settings');
     }
 
     if (!user) {
@@ -35,23 +39,23 @@ export default function ProfileTab() {
             <View>
                 <ThemedText type='big' style={{ fontSize: 22 }}>Body Metrics</ThemedText>
                 <View style={styles.metricsContainer}>
-                    <ViewHighlighter style={{width: 'auto', flex: 1, alignItems: 'flex-start', gap: 8, justifyContent: 'flex-start'}}>
+                    <ViewHighlighter style={{width: 'auto', flex: 1}}>
                         <BodyMetric 
-                            label="Weight" 
-                            icon={<SymbolView name='scalemass.fill' size={24} tintColor={'black'} />}
+                            icon={<SymbolView name='scalemass.fill' size={24} tintColor={'#AB3600'} />}
                             value={user.weight} 
-                            valueTarget={user.weightTarget}
-                            unit="kg"
-                            color={'red'} />
+                            unit="KG"/>
                     </ViewHighlighter>
-                    <ViewHighlighter style={{width: 'auto', flex: 1, alignItems: 'flex-start', gap: 8, justifyContent: 'flex-start'}}>
+                    <ViewHighlighter style={{width: 'auto', flex: 1,}}>
                         <BodyMetric 
-                            label="Body Fat" 
-                            icon={<SymbolView name='drop' size={24} tintColor={'black'} />}
-                            value={user.fat} 
-                            valueTarget={user.fatTarget}
-                            unit="%" 
-                            color={'purple'} />
+                            icon={<SymbolView name='ruler.fill' size={24} tintColor={'#0058BC'} />}
+                            value={user.height} 
+                            unit="CM" />
+                    </ViewHighlighter>
+                    <ViewHighlighter style={{width: 'auto', flex: 1}}>
+                        <BodyMetric 
+                            icon={<SymbolView name='birthday.cake.fill' size={24} tintColor={'#006493'} />}
+                            value={user.age} 
+                            unit="YRS" />
                     </ViewHighlighter>
                 </View>
             </View>
@@ -60,7 +64,7 @@ export default function ProfileTab() {
                 <ThemedText type='big' style={{ fontSize: 22 }}>Settings</ThemedText>
                 <ViewHighlighter style={{marginTop: 8, padding: 0}}>
                     <Settings list={[
-                        { label: 'Account', Icon: <SymbolView name='gear' size={24} tintColor={'black'}/>, onPress: () => {} },
+                        { label: 'Account', Icon: <SymbolView name='gear' size={24} tintColor={'black'}/>, onPress: handleSettings },
                     ]} />
                 </ViewHighlighter>
             </View>
@@ -110,27 +114,18 @@ function Settings({ list }: { list: SettingsElemProps[] }) {
 }
 
 interface BodyMetricProps {
-    label: string;
     icon:  React.ReactNode;
     value: number;
-    valueTarget: number;
     unit: string;
-    color?: ColorValue; 
 }
-function BodyMetric({ label, value, valueTarget, unit, icon, color = 'red' }: BodyMetricProps) {
+function BodyMetric({ value, unit, icon }: BodyMetricProps) {
     return (
-        <View style={{flexDirection: 'column', gap: 8, width: '100%'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-                {icon}
-                <ThemedText type='defaultThin'>{label}</ThemedText>
-            </View>
-        
-            <View style={{flexDirection: 'row', alignItems: 'flex-end', gap: 4}}>
-                <ThemedText type='title'>{value}</ThemedText>
-                <ThemedText type='defaultThin' style={{marginBottom: 4}}>{unit}</ThemedText>
-            </View>
-            
-            {
+        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 4, width: '100%'}}>
+            {icon}
+            <ThemedText type='title'>{value}</ThemedText>
+            <ThemedText type='defaultThin' style={{marginBottom: 4}}>{unit}</ThemedText>
+
+            {/* {
                 value > valueTarget ? (
                     <ProgressBar current={valueTarget} target={value} color={color} />
                 ) : (
@@ -139,24 +134,53 @@ function BodyMetric({ label, value, valueTarget, unit, icon, color = 'red' }: Bo
             }
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end' }}>
                 <ThemedText type='small'>Target: {valueTarget} {unit}</ThemedText>
-            </View>
+            </View> */}
         </View>
     );
 }
 
-function Gain({ goal }: { goal: 'muscle' | 'fat_loss' }) {
-    return (
-        <View 
-            style={{
-                ...styles.gainContainer, 
-                backgroundColor: goal === 'muscle' ? '#F9D4D4' : '#D4F9DC'
-            }}>
-            {goal === 'muscle' ? (
+function Gain({ goal }: { goal: 'muscle' | 'fat_loss'| 'fit' }) {
+    switch (goal) {
+        case 'fit':
+            return (
+                <View style={{
+                    ...styles.gainContainer, 
+                    backgroundColor: '#b9b9ff' 
+                }}>
+                    <SymbolView name='heart.fill' size={24} tintColor={'black'} />
+                    <ThemedText type='small'>Goal: Stay Fit</ThemedText>
+                </View>
+            )
+        case 'muscle':
+            return (
+                <View style={{
+                    ...styles.gainContainer, 
+                    backgroundColor: '#ffc8c8'
+                }}>
                     <SymbolView name='figure.strengthtraining.traditional' size={24} tintColor={'black'} />
-                ) : (
+                    <ThemedText type='small'>Goal: Muscle Gain</ThemedText>
+                </View>
+            )
+        case 'fat_loss':
+            return (
+                <View style={{
+                    ...styles.gainContainer, 
+                    backgroundColor: '#bbfcc9'
+                }}>
                     <SymbolView name='figure.run' size={24} tintColor={'black'} />
-            )}
-            <ThemedText type='small'>Goal: {goal === 'muscle' ? 'Muscle Gain' : 'Fat Loss'}</ThemedText>
-        </View>
-    )
+                    <ThemedText type='small'>Goal: Fat Loss</ThemedText>
+                </View>
+            )
+    }
 }
+//                 backgroundColor: goal === 'muscle' ? '#F9D4D4' : '#D4F9DC'
+//             }}>
+//             {goal === 'muscle' ? (
+//                     <SymbolView name='figure.strengthtraining.traditional' size={24} tintColor={'black'} />
+//                 ) : (
+//                     <SymbolView name='figure.run' size={24} tintColor={'black'} />
+//             )}
+//             <ThemedText type='small'>Goal: {goal === 'muscle' ? 'Muscle Gain' : 'Fat Loss'}</ThemedText>
+//         </View>
+//     )
+// }

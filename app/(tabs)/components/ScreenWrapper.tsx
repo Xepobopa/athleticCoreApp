@@ -1,15 +1,15 @@
 import { Colors } from "@/constants/theme"
 import React from "react"
-import { ScrollView, StyleSheet, View, ViewProps, ViewStyle } from "react-native"
+import { ScrollView, ScrollViewProps, StyleSheet, ViewStyle } from "react-native"
 
-export interface ScreenWrapperProps {
+export type ScreenWrapperProps = ScrollViewProps & {
     children: React.ReactNode,
     style?: ViewStyle
-}
+} 
 
-export default function ScreenWrapper({ children, style }: ScreenWrapperProps) {
+export default function ScreenWrapper({ children, style, ...other }: ScreenWrapperProps) {
     return (
-        <ScrollView style={[styles.container]} contentContainerStyle={{ paddingBottom: 16, ...style }} >
+        <ScrollView style={[styles.container]} contentContainerStyle={{ paddingBottom: 16, ...style }} {...other}>
             {children}
         </ScrollView>
     )

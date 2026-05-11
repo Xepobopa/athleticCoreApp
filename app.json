@@ -38,8 +38,13 @@
           }
         }
       ],
+      [
+        "expo-image",
+        {
+          "disableLibdav1d": true
+        }
+      ],
       "expo-font",
-      "expo-image",
       "expo-web-browser"
     ],
     "experiments": {

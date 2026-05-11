@@ -1,4 +1,4 @@
-import { AddUser, GetAllUsers, User } from "./storageService";
+import { AddUser, GetAllUsers, UpdateUser, User } from "./storageService";
 
 export const authService = {
     login: async(email: string, password: string): Promise<User> => {
@@ -29,9 +29,8 @@ export const authService = {
                         password,
                         iconUrl: "https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg",
                         weight: 67,
-                        weightTarget: 67,
-                        fat: 67,
-                        fatTarget: 12,
+                        height: 67,
+                        age: 67,
                         goal: 'fat_loss',
                     };
                     await AddUser(newUser);
@@ -39,5 +38,18 @@ export const authService = {
                 }
             }, 1000);
         })
+    },
+    updateUser: async(user: User): Promise<User | null> => {
+        return new Promise((resolve) => {
+            setTimeout(async () => {
+                const userToUpdate = await GetAllUsers().then(users => users.find(u => u.id === user.id));
+                if (!userToUpdate) {
+                    resolve(null);
+                    return;
+                }
+                const success = await UpdateUser({...userToUpdate, ...user});
+                resolve(success);
+            }, 1);
+        });
     }
 }
