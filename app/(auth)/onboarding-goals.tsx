@@ -18,7 +18,7 @@ const goalsOptions: { label: string; id: GoalType }[] = [
 
 export default function OnboardingGoalsScreen() {
   const router = useRouter();
-  const { updateUser, user: loggedUser } = useAuth();
+  const { updateUser, user: loggedUser, login } = useAuth();
    
   const [goal, setGoal] = useState<string | null>(null);
   const [days, setDays] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export default function OnboardingGoalsScreen() {
       updateUser({ goal: selectedGoal.id, id: loggedUser.id } as User).then(() => {
         console.log(loggedUser);
         // relogin to update user data in context
-
+        login(loggedUser.email, loggedUser.password)
       }).catch(e => {
         console.log('Error updating user goal', e);
       });

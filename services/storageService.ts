@@ -1,20 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Calories, kcalCalendarType, Meal, MOCK_MEAL } from "./MacroService";
+import { GetUserCalendar, GetUserKcalTarget, SaveUserCalendar, SetUserKcalTarget } from "./diaryService";
 
 const KEY_USERS = 'users';
 const KEY_AUTHED_USER = 'authed_user';
 export type GoalType = 'muscle' | 'fat_loss' | 'fit';
-
-export type Calories = {
-    kcal: number,
-    fat: number,
-    protein: number,
-    carb: number
-}
-
-export type kcalCalendarType = {
-    date: Date,
-    value: Calories
-}
 
 export interface User {
     id: string;
@@ -28,21 +18,57 @@ export interface User {
 
     goal: GoalType;
     iconUrl: string;
-
-    kcalPerDay: Calories;
-    kcalCalendar: number[]
 }
 
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1);
+const twoDaysAgo = new Date(today);
+twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 const mockUsers: User[] = [
     {id: "1", name: "Mike Mentzer", email: "mike@example.com", password: "mike", goal: "muscle", iconUrl: "https://thebarbell.com/wp-content/uploads/2023/02/Mike-Mentzer-workout-4.jpg", weight: 70, height: 175, age: 23},
-    {id: "2", name: "Tom Platz", email: "tom@example.com", password: "tom", goal: "fat_loss", iconUrl: "https://media.themoviedb.org/t/p/w440_and_h660_face/tq3rbYYrmBu1KT1MQhmRVUHwUQH.jpg", weight: 105, height: 180, age: 25},
+    {id: "2", name: "Tom Platz", email: "tom@example.com", password: "tom", goal: "fat_loss", iconUrl: "https://media.themoviedb.org/t/p/w440_and_h660_face/tq3rbYYrmBu1KT1MQhmRVUHwUQH.jpg", weight: 105, height: 180, age: 25 },
 ]
+
+const test_diary: kcalCalendarType = {
+  date: new Date(),
+  value: {
+    kcal: 1234,
+    protein: 123,
+    carb: 123,
+    fat: 123,
+  },
+  breakfast: [MOCK_MEAL[0], MOCK_MEAL[1]],
+  dinner: [],
+  lunch: [],
+  snacks: []
+}
+const test_kcal_target: Calories =  {
+    kcal: 2500,
+    protein: 160,
+    carb: 280,
+    fat: 70,
+}
 
 // one time add mock users to the storage
 export async function CheckAndAddMockUsers() {
-    const users = await GetAllUsers();
+    let users = await GetAllUsers();
     if (users.length === 0) {
         await AsyncStorage.setItem(KEY_USERS, JSON.stringify(mockUsers));
+        
+        users = await GetAllUsers();
+        // also add diary
+        for (const usr of users) {
+            const diary = await GetUserCalendar(usr.id)
+            if (!diary) {
+                SaveUserCalendar(usr.id, [test_diary])
+            }
+
+            const target = await GetUserKcalTarget(usr.id)
+            if (!target) {
+                await SetUserKcalTarget(usr.id, test_kcal_target)
+            }
+        }
     }
 }
 
@@ -95,3 +121,4 @@ export async function ClearAuthedUser() {
 export async function ClearAllData() {
     await AsyncStorage.clear();
 }
+

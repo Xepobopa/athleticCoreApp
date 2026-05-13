@@ -47,6 +47,7 @@ export default function ProgramsTab() {
 
   return (
       <SafeAreaView style={styles.safeArea}>
+        <ThemedText type="title" style={{paddingTop: 35}}>Programs</ThemedText>
         <FlatList
           data={PROGRAMS_DATA}
           keyExtractor={(item) => item.id}

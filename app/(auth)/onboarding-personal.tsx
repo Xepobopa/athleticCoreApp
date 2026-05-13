@@ -9,10 +9,12 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { styles as globalStyles } from './styles';
 import { User } from '@/services/storageService';
+import { calculateAllMacros, Calories } from '@/services/MacroService';
+import { SetUserKcalTarget } from '@/services/diaryService';
 
 export default function OnboardingPersonalScreen() {
   const router = useRouter();
-  const { updateUser, user: loggedUser } = useAuth();
+  const { updateUser, user: loggedUser, login } = useAuth();
   const [weight, setWeight] = useState<number | undefined>(undefined);
   const [height, setHeight] = useState<number | undefined>(undefined);
   const [age, setAge] = useState<number | undefined>(undefined);
@@ -36,7 +38,12 @@ export default function OnboardingPersonalScreen() {
       return;
     }
 
-    updateUser({ weight, height, age, name, id: loggedUser.id } as User);
+    updateUser({ weight, height, age, name, id: loggedUser.id } as User).then(() => {
+        // also calculate ans save target calories
+        const calories = calculateAllMacros(weight, height, age, loggedUser.goal)
+        SetUserKcalTarget(loggedUser.id, calories)
+        login(loggedUser.email, loggedUser.password)
+    })
 
     router.push('/(auth)/onboarding-goals');
   };

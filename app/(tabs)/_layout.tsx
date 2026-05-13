@@ -9,7 +9,7 @@ export default function TabLayout() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <NativeTabs tintColor={'#FF5F1F'}>
-        <NativeTabs.Trigger name='diary'>
+        <NativeTabs.Trigger name='(diary)'>
           <NativeTabs.Trigger.Icon sf={'fork.knife'} />
           <NativeTabs.Trigger.Label>Diary</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
