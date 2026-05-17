@@ -41,7 +41,7 @@ export default function SignUp() {
     }
 
     // validate email
-    if (!email.match('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')) {
+    if (!email.match(/^[\w.-]+@[\w.-]+\.[a-zA-O0-9-]{2,4}$/i)) {
       setEmailWarning(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
       return;

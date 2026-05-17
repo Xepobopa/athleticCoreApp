@@ -95,13 +95,13 @@ export default function OnboardingGoalsScreen() {
             onSelect={setGoal}
           />
 
-          <SelectionBlock 
+          {/* <SelectionBlock 
             title="Частота тренувань"
             iconName="calendar.badge.clock"
             options={['1-2', '3-4', '5+']}
             selectedValue={days}
             onSelect={setDays}
-          />
+          /> */}
 
           <SelectionBlock 
             title="Обладнання"
