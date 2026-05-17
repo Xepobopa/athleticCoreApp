@@ -7,7 +7,6 @@ import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SymbolView } from "expo-symbols";
 import IntenseBadge from "./components/Intense";
 
 export default function ProgramsTab() {
@@ -47,7 +46,7 @@ export default function ProgramsTab() {
 
   return (
       <SafeAreaView style={styles.safeArea}>
-        <ThemedText type="title" style={{paddingTop: 35}}>Programs</ThemedText>
+        <ThemedText type="title" style={{paddingTop: 35, fontSize: 28}}>Програми тренувань</ThemedText>
         <FlatList
           data={PROGRAMS_DATA}
           keyExtractor={(item) => item.id}

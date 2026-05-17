@@ -58,6 +58,9 @@ export async function LogFoodToDiary(
         calendar[dayIndex].value.protein += mealToLog.kcal.protein;
         calendar[dayIndex].value.carb += mealToLog.kcal.carb;
         calendar[dayIndex].value.fat += mealToLog.kcal.fat;
+        calendar[dayIndex].value.water += mealToLog.kcal.water;
+        calendar[dayIndex].value.salt += mealToLog.kcal.salt;
+        calendar[dayIndex].value.fiber += mealToLog.kcal.fiber;
     } else {
         const newDay: kcalCalendarType = {
             date: targetDate,

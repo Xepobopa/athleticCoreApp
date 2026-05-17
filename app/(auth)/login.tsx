@@ -1,15 +1,14 @@
 import { Icons } from "@/assets";
 import { ThemedText } from "@/components/themed-text";
+import { Colors } from "@/constants/theme";
+import { useAuth } from "@/hooks/use-auth";
+import * as Haptics from 'expo-haptics';
 import { useRouter } from "expo-router";
+import React from "react";
 import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView, KeyboardToolbar } from "react-native-keyboard-controller";
 import { Input } from "./components/input";
 import { styles } from "./styles";
-import * as Haptics from 'expo-haptics';
-import React from "react";
-import { authService } from "@/services/authServices";
-import { Colors } from "@/constants/theme";
-import { useAuth } from "@/hooks/use-auth";
 
 export default function Login() {
   const router = useRouter();
@@ -61,12 +60,12 @@ export default function Login() {
         <View style={styles.lightningContainer}>
           <Icons.Lightning width={24} height={30} />
         </View>
-        <ThemedText type='title' style={{marginBottom: 8}}>Welcome Back</ThemedText>
-        <ThemedText type='default'>Sign in to continue your progress.</ThemedText>
+        <ThemedText type='title' style={{marginBottom: 8}}>Привіт знову!</ThemedText>
+        <ThemedText type='default'>Увійдіть, щоб продовжити прогрес.</ThemedText>
 
         <View style={styles.inputContainer}>
           <Input 
-            title="Email address" 
+            title="Пошта" 
             placeholder="athlete@example.com" 
             Icon={Icons.Email} 
             isWarning={emailWarning}
@@ -79,7 +78,7 @@ export default function Login() {
               setEmail(text);
             }} />
           <Input 
-            title="Password" 
+            title="Пароль" 
             placeholder="••••••••" 
             Icon={Icons.Lock} 
             isWarning={passwordWarning}
@@ -90,11 +89,11 @@ export default function Login() {
               setPassword(text);
             }} />
         </View>
-        <View style={{width: '100%', alignItems: 'flex-end'}}>
+        {/* <View style={{width: '100%', alignItems: 'flex-end'}}>
           <TouchableOpacity onPress={handleOnForgotPassword}>
-            <ThemedText type='small' style={styles.forgotPasswordText}>Forgot password?</ThemedText>
+            <ThemedText type='small' style={styles.forgotPasswordText}>Забули пароль?</ThemedText>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={isLoading}>
           {
@@ -102,7 +101,7 @@ export default function Login() {
               <ActivityIndicator size={'small'} color={Colors.light.background} />
             ) : (
               <>
-                <ThemedText type='default' style={{color: '#fff'}}>Login</ThemedText>
+                <ThemedText type='default' style={{color: '#fff'}}>Увійти</ThemedText>
                 <Icons.ArrowRight />
               </>
             )
@@ -110,9 +109,9 @@ export default function Login() {
         </TouchableOpacity>
 
         <View style={{flexDirection: 'row', marginTop: 40, gap: 4}}>
-          <ThemedText type='default'>Don't have an account?</ThemedText>
+          <ThemedText type='default'>Досі немаєте акаунт?</ThemedText>
           <TouchableOpacity onPress={handleOnSignUp}>
-            <ThemedText type='default' style={{color: '#FF5F1F'}}>Sign Up</ThemedText>
+            <ThemedText type='default' style={{color: '#FF5F1F'}}>Зареєструватися</ThemedText>
           </TouchableOpacity>
         </View>
 

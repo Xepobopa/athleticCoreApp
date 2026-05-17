@@ -26,55 +26,55 @@ export const PROGRAMS_DATA: Program[] = [
   {
     id: 'prog_1',
     isIntense: true,
-    title: 'Full Body Blast',
-    description: 'Intense 7-day full body workout to build strength.',
+    title: 'Full Body',
+    description: 'Інтенсивне 7-денне тренування всього тіла для розвитку сили.',
     img_url: 'https://thumbs.dreamstime.com/b/strong-bodybuilder-doing-exercises-dumbbells-turned-back-muscular-male-model-isolated-over-black-background-55122269.jpg',
-    equipment: ['Dumbbells', 'Barbell'],
+    equipment: ['Гантелі', 'Штанга'],
     days: [
       {
         day: 1,
-        title: 'Upper Body',
+        title: 'Верх тіла',
         exercises: [
           {
             id: 'exc_1_1',
-            name: 'Push Ups',
-            muscles: ['Chest', 'Triceps', 'Shoulders', 'Back'],
-            instructions: 'Keep your core tight and back straight. Lower your body until your chest nearly touches the floor.',
+            name: 'Віджимання',
+            muscles: ['Груди', 'Трицепси', 'Плечі', 'Спина'],
+            instructions: 'Тримайте корпус напруженим, а спину прямою. Опускайтеся вниз, доки груди майже не торкнуться підлоги',
             videoUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4' 
           },
           {
             id: 'exc_1_2',
-            name: 'Pull Ups',
-            muscles: ['Back', 'Biceps'],
-            instructions: 'Pull yourself up until your chin passes the bar.',
+            name: 'Підтягування',
+            muscles: ['Спина', 'Біцепч'],
+            instructions: 'Підтягуйтесь, поки підборіддя не перетне перекладину.',
             videoUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g'
           }
         ]
       },
-      { day: 2, title: 'Lower Body', exercises: [] },
-      { day: 3, title: 'Rest', exercises: [] },
-      { day: 4, title: 'Core', exercises: [] },
-      { day: 5, title: 'Cardio', exercises: [] },
+      { day: 2, title: 'Нижня частина тіла', exercises: [] },
+      { day: 3, title: 'Відпочинок', exercises: [] },
+      { day: 4, title: 'Відпочинок', exercises: [] },
+      { day: 5, title: 'Кардіо', exercises: [] },
       { day: 6, title: 'Full Body', exercises: [] },
-      { day: 7, title: 'Rest', exercises: [] },
+      { day: 7, title: 'Відпочинок', exercises: [] },
     ]
   },
   {
     id: 'prog_2',
     isIntense: false,
-    title: 'Core Crusher',
-    description: 'Focus on your abs and lower back',
+    title: "Мʼязи кору",
+    description: 'Зосередження на пресі та попереку',
     img_url: 'https://thumbs.dreamstime.com/b/handsome-power-athletic-young-man-great-physique-strong-bodybuilder-six-pack-perfect-abs-shoulders-biceps-triceps-55122268.jpg',
-    equipment: ['Bodyweight'],
+    equipment: ['Вага тіла'],
     days: Array.from({ length: 7 }, (_, i) => ({ day: i + 1, title: `Day ${i + 1}`, exercises: [] }))
   },
   {
     id: 'prog_3',
     isIntense: false,
-    title: 'Mobility Flow',
-    description: 'Stretch and relax your muscles.',
+    title: 'мобільність',
+    description: "Розтягніть і розслабте м'язи.",
     img_url: 'https://thumbs.dreamstime.com/b/yoga-workout-young-pretty-girl-stretching-legs-31488562.jpg',
-    equipment: ['Yoga Mat'],
+    equipment: ['Мат для йоги'],
     days: Array.from({ length: 7 }, (_, i) => ({ day: i + 1, title: `Day ${i + 1}`, exercises: [] }))
   }
 ];

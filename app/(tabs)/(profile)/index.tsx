@@ -1,17 +1,31 @@
 import Button from "@/components/Button";
-import ProgressBar from "@/components/progress-bar";
 import { ThemedText } from "@/components/themed-text";
 import ViewHighlighter from "@/components/view-highlighter";
 import { useAuth } from "@/hooks/use-auth";
+import { SetUserKcalTarget } from "@/services/diaryService";
+import { calculateAllMacros } from "@/services/MacroService";
+import { User } from "@/services/storageService";
 import { router } from "expo-router";
 import { SymbolView } from "expo-symbols";
-import React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { default as React, useEffect } from "react";
+import { ActivityIndicator, TextInput, TouchableOpacity, View } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { styles } from "./styles";
 
 export default function ProfileTab() {
-    const { user, logout } = useAuth();
+    const { user, logout, updateUser, isReady } = useAuth();
+    const [metricsEdit, setMetricsEdit] = React.useState(false)
+    const [weight, setWeight] = React.useState(0)
+    const [height, setHeight] = React.useState(0)
+    const [age, setAge] = React.useState(0)
+
+    useEffect(() => {
+        if (isReady && user) {
+            setWeight(user.weight)
+            setHeight(user.height)
+            setAge(user.age)
+        }
+    }, [user, isReady])
 
     const handleLogout = () => {
         logout();
@@ -20,6 +34,42 @@ export default function ProfileTab() {
 
     const handleSettings = () => {
         router.push('/(tabs)/(profile)/settings');
+    }
+
+    const handleToggleEditMetrics = () => {
+        if (!user) return
+
+        if (metricsEdit) {
+            // save changes
+            // validate
+            if (weight <= 0 || weight > 300) {
+                setWeight(user.weight)
+            }
+            if (height <= 0 || height > 250) {
+                setHeight(user.height)
+            }
+            if (age <= 14 || age > 100) {
+                setAge(user.age)
+            }
+
+            // does not update, if nothing changed 
+            if (
+                weight === user.weight &&
+                height === user.height &&
+                age === user.age
+            ) {
+                
+            } else {
+                updateUser({ id: user.id, weight, height, age } as User)
+                
+                // and recalculate kcal target
+                const calories = calculateAllMacros(weight, height, age, user.goal)
+                console.log('update to :', calories)
+                SetUserKcalTarget(user.id, calories)
+            }
+        }
+
+        setMetricsEdit(!metricsEdit)
     }
 
     if (!user) {
@@ -37,41 +87,56 @@ export default function ProfileTab() {
             </ViewHighlighter>
 
             <View>
-                <ThemedText type='big' style={{ fontSize: 22 }}>Body Metrics</ThemedText>
+                <View style={{...styles.row, justifyContent: 'space-between', alignItems: 'center'}}>
+                    <ThemedText type='big' style={{ fontSize: 22 }}>Параметри тіла</ThemedText>
+                    <TouchableOpacity onPress={handleToggleEditMetrics}>
+                        {
+                            metricsEdit 
+                                ? <SymbolView name='pencil.slash' tintColor={'black'} size={26}/>
+                                : <SymbolView name='pencil.line' tintColor={'black'} size={26}/>
+                        }
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.metricsContainer}>
                     <ViewHighlighter style={{width: 'auto', flex: 1}}>
                         <BodyMetric 
                             icon={<SymbolView name='scalemass.fill' size={24} tintColor={'#AB3600'} />}
-                            value={user.weight} 
-                            unit="KG"/>
+                            value={weight} 
+                            onChange={setWeight}
+                            isEdit={metricsEdit}
+                            unit="КГ"/>
                     </ViewHighlighter>
                     <ViewHighlighter style={{width: 'auto', flex: 1,}}>
                         <BodyMetric 
                             icon={<SymbolView name='ruler.fill' size={24} tintColor={'#0058BC'} />}
-                            value={user.height} 
+                            value={height} 
+                            onChange={setHeight}
+                            isEdit={metricsEdit}
                             unit="CM" />
                     </ViewHighlighter>
                     <ViewHighlighter style={{width: 'auto', flex: 1}}>
                         <BodyMetric 
                             icon={<SymbolView name='birthday.cake.fill' size={24} tintColor={'#006493'} />}
-                            value={user.age} 
-                            unit="YRS" />
+                            value={age} 
+                            onChange={setAge}
+                            isEdit={metricsEdit}
+                            unit="РОКІВ" />
                     </ViewHighlighter>
                 </View>
             </View>
 
             <View style={{marginTop: 32}}>
-                <ThemedText type='big' style={{ fontSize: 22 }}>Settings</ThemedText>
+                <ThemedText type='big' style={{ fontSize: 22 }}>Налаштування</ThemedText>
                 <ViewHighlighter style={{marginTop: 8, padding: 0}}>
                     <Settings list={[
-                        { label: 'Account', Icon: <SymbolView name='gear' size={24} tintColor={'black'}/>, onPress: handleSettings },
+                        { label: 'Акаунт', Icon: <SymbolView name='gear' size={24} tintColor={'black'}/>, onPress: handleSettings },
                     ]} />
                 </ViewHighlighter>
             </View>
 
             <ViewHighlighter style={{marginTop: 32, padding: 0}}>
                 <Button 
-                    text="Log out" 
+                    text="Вийти" 
                     onClick={handleLogout} 
                     style={{width: '100%'}} 
                     textStyle={{color: '#BA1A1A'}} 
@@ -117,24 +182,29 @@ interface BodyMetricProps {
     icon:  React.ReactNode;
     value: number;
     unit: string;
+    isEdit: boolean;
+    onChange: (value: number) => void;
 }
-function BodyMetric({ value, unit, icon }: BodyMetricProps) {
+function BodyMetric({ value, unit, icon, isEdit, onChange }: BodyMetricProps) {
+    const handleTextChange = (text: string) => {
+        const val = text === '' ? 0 : Number(text)
+        if (val) onChange(val)
+    }
+
     return (
         <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 4, width: '100%'}}>
             {icon}
-            <ThemedText type='title'>{value}</ThemedText>
-            <ThemedText type='defaultThin' style={{marginBottom: 4}}>{unit}</ThemedText>
-
-            {/* {
-                value > valueTarget ? (
-                    <ProgressBar current={valueTarget} target={value} color={color} />
-                ) : (
-                    <ProgressBar current={value} target={valueTarget} color={color} />
-                )
+            {
+                isEdit 
+                    ? <TextInput 
+                        style={styles.metricText} 
+                        onChangeText={handleTextChange} 
+                        keyboardType='number-pad'
+                        selectTextOnFocus
+                        value={String(value)} />
+                    : <ThemedText type='title'>{value}</ThemedText>
             }
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <ThemedText type='small'>Target: {valueTarget} {unit}</ThemedText>
-            </View> */}
+            <ThemedText type='defaultThin' style={{marginBottom: 4}}>{unit}</ThemedText>
         </View>
     );
 }
@@ -148,7 +218,7 @@ function Gain({ goal }: { goal: 'muscle' | 'fat_loss'| 'fit' }) {
                     backgroundColor: '#b9b9ff' 
                 }}>
                     <SymbolView name='heart.fill' size={24} tintColor={'black'} />
-                    <ThemedText type='small'>Goal: Stay Fit</ThemedText>
+                    <ThemedText type='small'>Мета: Підтримувати Форму</ThemedText>
                 </View>
             )
         case 'muscle':
@@ -158,7 +228,7 @@ function Gain({ goal }: { goal: 'muscle' | 'fat_loss'| 'fit' }) {
                     backgroundColor: '#ffc8c8'
                 }}>
                     <SymbolView name='figure.strengthtraining.traditional' size={24} tintColor={'black'} />
-                    <ThemedText type='small'>Goal: Muscle Gain</ThemedText>
+                    <ThemedText type='small'>Мета: Нарощування мʼязів</ThemedText>
                 </View>
             )
         case 'fat_loss':
@@ -168,7 +238,7 @@ function Gain({ goal }: { goal: 'muscle' | 'fat_loss'| 'fit' }) {
                     backgroundColor: '#bbfcc9'
                 }}>
                     <SymbolView name='figure.run' size={24} tintColor={'black'} />
-                    <ThemedText type='small'>Goal: Fat Loss</ThemedText>
+                    <ThemedText type='small'>Мета: Схуднути</ThemedText>
                 </View>
             )
     }

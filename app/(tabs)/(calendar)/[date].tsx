@@ -22,7 +22,10 @@ const emptyCalories: Calories =
     kcal: 0,
     protein: 0,
     carb: 0,
-    fat: 0
+    fat: 0,
+    fiber: 0,
+    water: 0,
+    salt: 0,
   }
 
 const emptry_diary: kcalCalendarType = {
@@ -53,9 +56,9 @@ export default function DiaryHome() {
 
     const formatDateString = (d: Date) => d.toISOString().split('T')[0];
 
-    let title = targetDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    if (date === formatDateString(today)) title = 'Today';
-    else if (date === formatDateString(yesterday)) title = 'Yesterday';
+    let title = targetDate.toLocaleDateString('uk-UA', { month: 'long', day: 'numeric' });
+    if (date === formatDateString(today)) title = 'Cьогодні';
+    else if (date === formatDateString(yesterday)) title = 'Вчора';
 
     navigation.setOptions({ 
       title,
@@ -108,12 +111,12 @@ export default function DiaryHome() {
 
         {/* MEALS SECTION */}
         <View style={styles.mealsSection}>
-          <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Meals</ThemedText>
+          {/* <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Meals</ThemedText> */}
           
           <MealSlot 
             key={"slot_1"}
             isEditable={false}
-            title="Breakfast"
+            title="Сніданок"
             icon={<SymbolView name='sun.and.horizon'/>}
             onAddPress={() => onAddMeal('breakfast')}
             items={userDiary.breakfast}/>
@@ -121,7 +124,7 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_2"}
             isEditable={false}
-            title="Lunch"
+            title="Обід"
             icon={<SymbolView name='fork.knife'/>}
             onAddPress={() => onAddMeal('lunch')}
             items={userDiary.lunch}/>
@@ -129,7 +132,7 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_3"}
             isEditable={false}
-            title="Dinner"
+            title="Вечеря"
             icon={<SymbolView name='moon'/>}
             onAddPress={() => onAddMeal('dinner')}
             items={userDiary.dinner}/>
@@ -137,7 +140,7 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_4"}
             isEditable={false}
-            title="Snacks"
+            title="Снеки"
             onAddPress={() => onAddMeal('snacks')}
             icon={<SymbolView name='carrot'/>}
             items={userDiary.snacks}/>

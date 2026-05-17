@@ -11,9 +11,9 @@ import { useAuth } from '@/hooks/use-auth';
 import { GoalType, User } from '@/services/storageService';
 
 const goalsOptions: { label: string; id: GoalType }[] = [
-  { label: 'Lose Weight', id: 'fat_loss' },
-  { label: 'Build Muscle', id: 'muscle' },
-  { label: 'Stay Fit', id: 'fit' },
+  { label: 'Схуднути', id: 'fat_loss' },
+  { label: "Нарощування м'язів", id: 'muscle' },
+  { label: 'Підтримувати форму', id: 'fit' },
 ];
 
 export default function OnboardingGoalsScreen() {
@@ -82,13 +82,13 @@ export default function OnboardingGoalsScreen() {
         <View style={styles.header}>
           <ThemedText type="title">Goals & Preferences</ThemedText>
           <ThemedText type="default" style={styles.subtitle}>
-            Just a few more things to tailor your programs.
+            Ще кілька речей, щоб налаштувати вашу програму
           </ThemedText>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           <SelectionBlock 
-            title="Primary Goal"
+            title="Мета"
             iconName="target"
             options={goalsOptions.map(opt => opt.label)}
             selectedValue={goal}
@@ -96,7 +96,7 @@ export default function OnboardingGoalsScreen() {
           />
 
           <SelectionBlock 
-            title="Training Days (per week)"
+            title="Частота тренувань"
             iconName="calendar.badge.clock"
             options={['1-2', '3-4', '5+']}
             selectedValue={days}
@@ -104,16 +104,16 @@ export default function OnboardingGoalsScreen() {
           />
 
           <SelectionBlock 
-            title="Equipment"
+            title="Обладнання"
             iconName="dumbbell"
-            options={['Full Gym', 'Dumbbells', 'Bodyweight']}
+            options={['Тренажерний зал', 'Гантелі', 'Домашнє обладнання']}
             selectedValue={equipment}
             onSelect={setEquipment}
           />
         </ScrollView>
 
         <Button 
-          text="Finish" 
+          text="Закінчити" 
           style={globalStyles.loginButton} 
           textStyle={{ color: '#fff', fontSize: 16 }}
           onClick={handleFinish} 
@@ -156,16 +156,16 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   optionWrapper: {
-    flexGrow: 1, // Позволяет кнопкам растягиваться
+    flexGrow: 1, 
   },
   optionContainer: {
     paddingVertical: 12,
     paddingHorizontal: 16,
-    alignItems: 'center', // Переопределяем стили ViewHighlighter для центрирования текста
+    alignItems: 'center',
   },
   optionSelected: {
     borderColor: '#FF5F1F',
-    backgroundColor: '#FFF5F2', // Легкий оттенок оранжевого при выборе
+    backgroundColor: '#FFF5F2',
   },
   textSelected: {
     color: '#FF5F1F',

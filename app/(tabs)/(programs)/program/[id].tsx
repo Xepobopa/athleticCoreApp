@@ -23,12 +23,12 @@ export default function ProgramDetailsScreen() {
     if (program) {
       navigation.setOptions({ 
           title: program.title,
-          headerTitle: program.title // Sometimes headerTitle is required if you have custom header components
+          headerTitle: program.title
         });
     } else {
       navigation.setOptions({ 
-          title: "Program",
-          headerTitle: "Program"
+          title: "Програма тренувань",
+          headerTitle: "Програма тренувань"
         });
     }
   }, [programId]);
@@ -36,7 +36,7 @@ export default function ProgramDetailsScreen() {
   if (!program) {
     return (
       <ScreenWrapper style={styles.centerContainer}>
-        <ThemedText>Program not found</ThemedText>
+        <ThemedText>Програму не знайдено :(</ThemedText>
       </ScreenWrapper>
     );
   }
@@ -54,7 +54,7 @@ export default function ProgramDetailsScreen() {
           {program.days.map((day) => (
             <View key={day.day} style={styles.dayBlock}>
               <ThemedText type="defaultSemiBold" style={styles.dayTitle}>
-                Day {day.day} • {day.title}
+                День {day.day} • {day.title}
               </ThemedText>
 
               {day.exercises && day.exercises.length > 0 ? (
@@ -77,7 +77,7 @@ export default function ProgramDetailsScreen() {
                 ))
               ) : (
                 <ViewHighlighter style={styles.restCard}>
-                  <ThemedText style={styles.restText}>Rest Day or No Exercises</ThemedText>
+                  <ThemedText style={styles.restText}>Відпочинок</ThemedText>
                   <IconSymbol name="moon.zzz.fill" size={24} color="#A0A0A0" />
                 </ViewHighlighter>
               )}

@@ -3,9 +3,9 @@ import ViewHighlighter from '@/components/view-highlighter';
 import { useAuth } from '@/hooks/use-auth';
 import { Calories, kcalCalendarType } from '@/services/MacroService';
 import { GetUserCalendar, GetUserKcalTarget, LogFoodToDiary } from '@/services/diaryService';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import MacroStats from '../components/diary/MacroStats';
@@ -23,7 +23,10 @@ const emptyCalories: Calories =
     kcal: 0,
     protein: 0,
     carb: 0,
-    fat: 0
+    fat: 0,
+    water: 0,
+    fiber: 0,
+    salt: 0
   }
 
 const emptry_diary: kcalCalendarType = {
@@ -87,8 +90,9 @@ export default function DiaryHome() {
     update()
   }, [selectedFood, user]);
 
-  useEffect(() => {
-    if (!user) {
+
+  const fetchData = async () => {
+      if (!user) {
       return
     }
 
@@ -105,8 +109,14 @@ export default function DiaryHome() {
         setUserTarget(res)
       }
     })
-  }, [user, selectedFood])
-
+  }
+  
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [user, selectedFood])
+  );
+  
   if (!user) {
     return (
       <ScreenWrapper>
@@ -139,12 +149,12 @@ export default function DiaryHome() {
 
         {/* MEALS SECTION */}
         <View style={styles.mealsSection}>
-          <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Meals</ThemedText>
+          <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Їжа</ThemedText>
           
           <MealSlot 
             key={"slot_1"}
             isEditable
-            title="Breakfast"
+            title="Сніданок"
             icon={<SymbolView name='sun.and.horizon'/>}
             onAddPress={() => onAddMeal('breakfast')}
             items={userDiary.breakfast}/>
@@ -152,7 +162,7 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_2"}
             isEditable
-            title="Lunch"
+            title="Обід"
             icon={<SymbolView name='fork.knife'/>}
             onAddPress={() => onAddMeal('lunch')}
             items={userDiary.lunch}/>
@@ -160,7 +170,7 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_3"}
             isEditable
-            title="Dinner"
+            title="Вечеря"
             icon={<SymbolView name='moon'/>}
             onAddPress={() => onAddMeal('dinner')}
             items={userDiary.dinner}/>
@@ -168,10 +178,11 @@ export default function DiaryHome() {
           <MealSlot 
             key={"slot_4"}
             isEditable
-            title="Snacks"
+            title="Снеки"
             onAddPress={() => onAddMeal('snacks')}
             icon={<SymbolView name='carrot'/>}
             items={userDiary.snacks}/>
+          
           
         </View>
 

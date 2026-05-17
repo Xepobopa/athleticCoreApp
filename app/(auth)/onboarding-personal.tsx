@@ -55,7 +55,7 @@ export default function OnboardingPersonalScreen() {
         <View style={styles.header}>
           <ThemedText type="title">Personal Details</ThemedText>
           <ThemedText type="default" style={styles.subtitle}>
-            Let's get to know you better to customize your experience.
+            Давайте познайомимося з вами краще, щоб персоналізувати ваш досвід.
           </ThemedText>
         </View>
 
@@ -64,7 +64,7 @@ export default function OnboardingPersonalScreen() {
           <ViewHighlighter style={styles.inputContainer}>
             <View style={styles.labelRow}>
               <IconSymbol name="scalemass" size={24} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold">Weight</ThemedText>
+              <ThemedText type="defaultSemiBold">Вага</ThemedText>
             </View>
             <View style={styles.valueRow}>
               <TextInput
@@ -75,7 +75,7 @@ export default function OnboardingPersonalScreen() {
                 value={weight?.toString()}
                 onChangeText={(t) => setWeight(Number(t))}
               />
-              <ThemedText type="default" style={styles.unit}>kg</ThemedText>
+              <ThemedText type="default" style={styles.unit}>кг</ThemedText>
             </View>
           </ViewHighlighter>
 
@@ -83,7 +83,7 @@ export default function OnboardingPersonalScreen() {
           <ViewHighlighter style={styles.inputContainer}>
             <View style={styles.labelRow}>
               <IconSymbol name="ruler" size={24} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold">Height</ThemedText>
+              <ThemedText type="defaultSemiBold">Зріст</ThemedText>
             </View>
             <View style={styles.valueRow}>
               <TextInput
@@ -94,7 +94,7 @@ export default function OnboardingPersonalScreen() {
                 value={height?.toString()}
                 onChangeText={(t) => setHeight(Number(t))}
               />
-              <ThemedText type="default" style={styles.unit}>cm</ThemedText>
+              <ThemedText type="default" style={styles.unit}>см</ThemedText>
             </View>
           </ViewHighlighter>
 
@@ -102,7 +102,7 @@ export default function OnboardingPersonalScreen() {
           <ViewHighlighter style={styles.inputContainer}>
             <View style={styles.labelRow}>
               <IconSymbol name="calendar" size={24} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold">Age</ThemedText>
+              <ThemedText type="defaultSemiBold">Вік</ThemedText>
             </View>
             <View style={styles.valueRow}>
               <TextInput
@@ -113,14 +113,14 @@ export default function OnboardingPersonalScreen() {
                 value={age?.toString()}
                 onChangeText={(t) => setAge(Number(t))}
               />
-              <ThemedText type="default" style={styles.unit}>yo</ThemedText>
+              <ThemedText type="default" style={styles.unit}>років</ThemedText>
             </View>
           </ViewHighlighter>
 
           <ViewHighlighter style={styles.inputContainer}>
             <View style={styles.labelRow}>
               <IconSymbol name="person.fill" size={24} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold">Name</ThemedText>
+              <ThemedText type="defaultSemiBold">Імʼя</ThemedText>
             </View>
             <View style={styles.valueRow}>
               <TextInput
@@ -136,7 +136,7 @@ export default function OnboardingPersonalScreen() {
         </View>
 
         <Button 
-          text="Next" 
+          text="Далі" 
           style={globalStyles.loginButton} 
           textStyle={{ color: '#fff', fontSize: 16 }}
           onClick={handleNext} 

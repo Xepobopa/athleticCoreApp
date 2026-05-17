@@ -12,28 +12,46 @@ export default function MacroStats({ value, target }: MacroStatsProps) {
     return (
         <View style={styles.container}>
             <View style={styles.circleChartPlaceholder}>
-                <ThemedText type='subtitle'>{value.kcal}</ThemedText>
-                <ThemedText type='small'>/ {target.kcal} kcal</ThemedText>
+                <ThemedText type='title' style={{fontSize: 40}}>{value.kcal}</ThemedText>
+                <ThemedText type='subtitle'>/ {target.kcal} ккал</ThemedText>
             </View>
 
             <View style={styles.macrosContainer}>
-                <MacroRow label="Protein" current={value.protein} max={target.protein} color="#0070EB" />
-                <MacroRow label="Carbs" current={value.carb} max={target.carb} color="#009DE4" />
-                <MacroRow label="Fat" current={value.fat} max={target.fat} color="#FFB59C" />
+              <View style={styles.row}>
+                <MacroRow label="Білки" current={value.protein} max={target.protein} color="#0070EB" />
+                <MacroRow label="Вуг." current={value.carb} max={target.carb} color="#009DE4" />
+                <MacroRow label="Жири" current={value.fat} max={target.fat} color="#FFB59C" />
+              </View>
+              <View style={styles.row}>
+                <MacroRow label="Cіль" current={value.salt} max={target.salt} color="#bad5f1" />
+                <MacroRow label="Волокна" current={value.fiber} max={target.fiber} color="#a8ff9c" />
+                <MacroRow 
+                  label="Вода" 
+                  current={value.water}
+                  curStr={(value.water / 1000).toFixed(1)} 
+                  max={target.water}
+                  maxStr={(target.water / 1000).toFixed(1)} 
+                  unit="л" 
+                  color="#00b3e4" />
+              </View>
             </View>
         </View>
     )
 }
 
-const MacroRow = ({ label, current, max, color }: { label: string, current: number, max: number, color: string }) => {
+const MacroRow = ({ label, current, max, color, unit = "г", curStr, maxStr }: { 
+  label: string, current: number, max: number, color: string, unit?: string, curStr?: string, maxStr?: string
+}) => {
     const progress = Math.min(100, (current / max) * 100) || 0;
     console.log("progress: ", progress)
 
     return (
       <View style={styles.macroRow}>
-        <View style={styles.macroTextRow}>
+        <View style={styles.macroTextCol}>
           <ThemedText type="defaultSemiBold" style={styles.macroLabel}>{label}</ThemedText>
-          <ThemedText style={styles.macroValue}>{current.toFixed(2)} / {max}g</ThemedText>
+          <ThemedText style={styles.macroValue}>
+            {curStr || current.toFixed(0)} / {maxStr || max.toFixed(0)}{unit}
+            </ThemedText>
         </View>
         <View style={styles.progressBarBackground}>
           <View style={[styles.progressBarFill, { width: `${progress}%`, backgroundColor: color }]} />
@@ -46,16 +64,18 @@ const MacroRow = ({ label, current, max, color }: { label: string, current: numb
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 24,
+        gap: 28
     },
     circleChartPlaceholder: {
-        width: 150,
-        height: 150,
+        width: '100%',
+        aspectRatio: 1,
+        // height: 300,
         borderRadius: '50%',
-        borderWidth: 12,
+        borderWidth: 16,
         borderColor: '#FF5F1F',
         justifyContent: 'center',
         alignItems: 'center',
@@ -64,8 +84,19 @@ const styles = StyleSheet.create({
     macrosContainer: {
         gap: 12,
     },
-    macroRow: {
+  macroRow: {
+    width: '30%',
     gap: 6,
+  },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  macroTextCol: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   macroTextRow: {
     flexDirection: 'row',
@@ -81,13 +112,13 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   progressBarBackground: {
-    height: 9,
+    height: 16,
     backgroundColor: '#F0F0F0',
-    borderRadius: 4,
+    borderRadius: 8,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: 8,
   },
 })

@@ -11,19 +11,19 @@ export default function TabLayout() {
       <NativeTabs tintColor={'#FF5F1F'}>
         <NativeTabs.Trigger name='(diary)'>
           <NativeTabs.Trigger.Icon sf={'fork.knife'} />
-          <NativeTabs.Trigger.Label>Diary</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>Щоденник</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name='(calendar)'>
           <NativeTabs.Trigger.Icon sf={'calendar'}/>
-          <NativeTabs.Trigger.Label>Calendar</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>Календар</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name='(programs)'>
           <NativeTabs.Trigger.Icon sf={'dumbbell.fill'}/>
-          <NativeTabs.Trigger.Label>Programs</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>Програми</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name='(profile)'>
           <NativeTabs.Trigger.Icon sf={'person.fill'}/>
-          <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>Профіль</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     </SafeAreaView>

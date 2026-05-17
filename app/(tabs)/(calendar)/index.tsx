@@ -1,17 +1,14 @@
 import { ThemedText } from "@/components/themed-text";
 import ViewHighlighter from "@/components/view-highlighter";
-import { User } from "@/services/storageService";
+import { useAuth } from "@/hooks/use-auth";
+import { Calories, kcalCalendarType } from "@/services/MacroService";
+import { GetUserCalendar } from "@/services/diaryService";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SymbolView } from "expo-symbols";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenWrapper from "../components/ScreenWrapper";
-import { SymbolView } from "expo-symbols";
-import { Calories, kcalCalendarType } from "@/services/MacroService";
-import { GetUserCalendar, GetUserKcalTarget } from "@/services/diaryService";
-import React from "react";
-import { isToday } from "../(diary)";
-import { useAuth } from "@/hooks/use-auth";
 
 const formatDateString = (date: Date) => date.toISOString().split('T')[0];
 const emptyCalories: Calories =
@@ -19,7 +16,10 @@ const emptyCalories: Calories =
     kcal: 0,
     protein: 0,
     carb: 0,
-    fat: 0
+    fat: 0,
+    fiber: 0,
+    salt: 0,
+    water: 0,
   }
 
 const emptry_diary: kcalCalendarType = {
@@ -35,11 +35,10 @@ const emptyTarget: Calories = emptyCalories
 
 export default function CalendarScreen() {
   const router = useRouter();
-  const { user } = useAuth(); // Assuming this comes from your context
+  const { user } = useAuth(); 
   const scrollViewRef = useRef<ScrollView>(null);
   const isInitialScrollDone = useRef(false);
   
-  // 1. Only store the source of truth in state
   const [userCalendar, setUserCalendar] = useState<kcalCalendarType[]>([]);
   
   const calendarDays = useMemo(() => {
@@ -53,12 +52,11 @@ export default function CalendarScreen() {
     return days;
   }, []);
 
-  // 2. Fetch data and force re-render with spread operator [...]
   const fetchData = async () => {
     if (!user) return;
     console.log('Fetching calendar data...');
     const res = await GetUserCalendar(user.id);
-    setUserCalendar([...res]); // Creates a new array reference to ensure React re-renders
+    setUserCalendar([...res]); 
   }
 
   useFocusEffect(
@@ -67,7 +65,6 @@ export default function CalendarScreen() {
     }, [user])
   );
 
-  // 3. FIXED: Added userCalendar to dependencies so the map updates!
   const dataExistsMap = useMemo(() => {
     const map: Record<string, boolean> = {};
     userCalendar.forEach(entry => {
@@ -76,7 +73,6 @@ export default function CalendarScreen() {
     return map;
   }, [userCalendar]);
 
-  // 4. FIXED: Calculate streak dynamically based on the updated map
   const streak = useMemo(() => {
     const today_idx = calendarDays.length - 2;
     let currentStreak = 0;
@@ -86,13 +82,12 @@ export default function CalendarScreen() {
       if (dataExistsMap[dateString]) {
         currentStreak += 1;
       } else {
-        break; // Stop counting as soon as a day is missed
+        break;
       }
     }
     return currentStreak;
   }, [calendarDays, dataExistsMap]);
 
-  // 5. FIXED: Calculate average dynamically based on updated calendar
   const avgKcal = useMemo(() => {
     if (userCalendar.length === 0) return 0;
 
@@ -118,7 +113,7 @@ export default function CalendarScreen() {
     if (weeklyRecords.length === 0) return 0;
 
     const totalKcal = weeklyRecords.reduce((sum, entry) => sum + entry.value.kcal, 0);
-    return Math.round(totalKcal / weeklyRecords.length); // Added Math.round so you don't get ugly decimals in UI
+    return Math.round(totalKcal / weeklyRecords.length);
   }, [userCalendar, calendarDays]);
 
   const handleDayPress = (date: Date) => {
@@ -126,7 +121,7 @@ export default function CalendarScreen() {
     router.push(`/(tabs)/(calendar)/${dateString}`);
   };
 
-  const getDayName = (date: Date) => date.toLocaleDateString('en-US', { weekday: 'short' });
+  const getDayName = (date: Date) => date.toLocaleDateString('uk-UA', { weekday: 'short' }).toLocaleUpperCase();
   const getDayNumber = (date: Date) => date.getDate().toString();
 
   const handleLoadMorePreviousDays = () => {
@@ -145,9 +140,9 @@ export default function CalendarScreen() {
       <SafeAreaView style={styles.safeArea}>
           
           <View style={styles.header}>
-            <ThemedText type="title">Progress</ThemedText>
+            <ThemedText type="title">Прогрес</ThemedText>
             <ThemedText style={{...styles.instructionText, textAlign: 'left'}}>
-              Track your daily calorie targets and maintain your consistency.
+              Відстежуйте свої щоденні цілі щодо калорій та підтримуйте їх послідовність.
             </ThemedText>
 
             <View style={{marginTop: 32, gap: 16}}>
@@ -156,10 +151,10 @@ export default function CalendarScreen() {
                 <View style={[styles.block, styles.blockAvg]}>
                   <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}> 
                     <View style={{flexDirection: 'column', gap: 8}}>
-                      <ThemedText type='small'>THIS WEEK'S AVG</ThemedText>
+                      <ThemedText type='small'>СЕРЕДНЄ ЗА ЦЕЙ ТИЖДЕНЬ</ThemedText>
                       <View style={{flexDirection: 'row', gap: 4, alignItems: 'flex-end'}}>
                         <ThemedText type='title' style={{ fontSize: 30 }}>{avgKcal}</ThemedText>
-                        <ThemedText type='small' style={{ fontWeight: 300, marginBottom: 8 }}>kcal / day</ThemedText>
+                        <ThemedText type='small' style={{ fontWeight: 300, marginBottom: 8 }}>ккал / день</ThemedText>
                       </View>
                     </View>
                     <SymbolView name={'flame.circle.fill'} size={64}/>
@@ -170,10 +165,14 @@ export default function CalendarScreen() {
               {/* Streak */}
               <ViewHighlighter style={styles.highlighter}>
                 <View style={styles.block}>
-                  <ThemedText type="small">CURRENT STREAK </ThemedText>
+                  <ThemedText type="small">ДНІВ ПОСПІЛЬ</ThemedText>
                   <View style={{width: '100%', flexDirection: 'row', gap: 4, alignItems: 'flex-end'}}>
                     <ThemedText type="subtitle" style={{color: 'red'}}>{streak}</ThemedText>
-                    <ThemedText type="small" style={{ fontWeight: 300, marginBottom: 3 }}>days</ThemedText>
+                    <ThemedText type="small" style={{ fontWeight: 300, marginBottom: 3 }}>
+                      {
+                        streak === 1 ? "День"  : "Днів"
+                      }
+                    </ThemedText>
                   </View>
                 </View>
               </ViewHighlighter>
@@ -235,7 +234,7 @@ export default function CalendarScreen() {
 
           <View style={styles.content}>
             <ThemedText style={styles.instructionText}>
-              Select a day from the calendar above to view your detailed nutrition breakdown and meal slots.
+              Виберіть день у календарі вище, щоб переглянути детальний розподіл поживних речовин та розклад прийомів їжі.
             </ThemedText>
           </View>
 

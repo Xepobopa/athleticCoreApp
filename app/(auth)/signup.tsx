@@ -40,6 +40,13 @@ export default function SignUp() {
       return;
     }
 
+    // validate email
+    if (!email.match('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')) {
+      setEmailWarning(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+      return;
+    }
+
     try {
           await register(email, password);
           router.replace('/(auth)/onboarding-personal');
@@ -58,12 +65,12 @@ export default function SignUp() {
         <View style={styles.lightningContainer}>
           <Icons.Lightning width={24} height={30} />
         </View>
-        <ThemedText type='title' style={{marginBottom: 8}}>Hello There!</ThemedText>
+        <ThemedText type='title' style={{marginBottom: 8}}>Добрий день!</ThemedText>
         {/* <ThemedText type='default'>Sign in to continue your progress.</ThemedText> */}
 
         <View style={styles.inputContainer}>
           <Input 
-            title="Email address" 
+            title="Пошта" 
             placeholder="athlete@example.com" 
             Icon={Icons.Email} 
             isWarning={emailWarning}
@@ -76,7 +83,7 @@ export default function SignUp() {
               setEmail(text);
             }} />
           <Input 
-            title="Password" 
+            title="Пароль" 
             placeholder="••••••••" 
             Icon={Icons.Lock} 
             isWarning={passwordWarning}
@@ -94,7 +101,7 @@ export default function SignUp() {
               <ActivityIndicator size={'small'} color={Colors.light.background} />
             ) : (
               <>
-                <ThemedText type='default' style={{color: '#fff'}}>Sign Up</ThemedText>
+                <ThemedText type='default' style={{color: '#fff'}}>Зареєстроватися</ThemedText>
                 <Icons.ArrowUp />
               </>
             )
@@ -102,9 +109,9 @@ export default function SignUp() {
         </TouchableOpacity>
 
         <View style={{flexDirection: 'row', marginTop: 40, gap: 4}}>
-          <ThemedText type='default'>Don't have an account?</ThemedText>
+          <ThemedText type='default'>Досі немаєте аккаунт?</ThemedText>
           <TouchableOpacity onPress={handleOnLogIn}>
-            <ThemedText type='default' style={{color: '#FF5F1F'}}>Log In</ThemedText>
+            <ThemedText type='default' style={{color: '#FF5F1F'}}>Увійти</ThemedText>
           </TouchableOpacity>
         </View>
 

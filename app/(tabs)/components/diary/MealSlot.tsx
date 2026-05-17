@@ -40,23 +40,23 @@ export default function MealSlot({ title, icon, items, isEditable, onAddPress }:
                     <ThemedText type='defaultSemiBold' style={{ fontSize: 14 }}>{item.name}</ThemedText>
                     {/* <ThemedText ={'small'}></ThemedText> */}
                     <ThemedText type='small' style={{ color: '#888' }}>
-                        P: {item.kcal.protein} • C: {item.kcal.carb} • F: {item.kcal.fat}
+                        Б: {item.kcal.protein} • В: {item.kcal.carb} • Ж: {item.kcal.fat}
                     </ThemedText>
                 </View>
-                <ThemedText style={styles.mealItemKcal}>{item.kcal.kcal} kcal</ThemedText>
+                <ThemedText style={styles.mealItemKcal}>{item.kcal.kcal} ккал</ThemedText>
             </View>
           ))}
         </View>
       ) : (
         <View style={styles.emptyMeal}>
-          <ThemedText style={styles.emptyMealText}>No food added yet</ThemedText>
+          <ThemedText style={styles.emptyMealText}>Їжа ще не додана</ThemedText>
         </View>
       )}
 
         {
             isEditable && (
                 <Button 
-                  text='Add' 
+                  text='Додати' 
                   style={styles.addButton}
                   onClick={onAddPress}
                   IconLeft={<SymbolView name='plus' tintColor={'black'} size={20}/>}/>

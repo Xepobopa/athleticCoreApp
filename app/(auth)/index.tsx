@@ -4,15 +4,15 @@ import { useEffect } from "react";
 import React from "react"
 
 export default function HomeScreen() {
-    const { user, login } = useAuth()
-    const [done, setDone] = React.useState(false)
+    const { user } = useAuth()
+    // const [done, setDone] = React.useState(false)
 
     // TODO: remove in prod
-    useEffect(() => {
-        login('mike@example.com', 'mike').then(() => setDone(true))
-    }, [])
+    // useEffect(() => {
+    //     login('mike@example.com', 'mike').then(() => setDone(true))
+    // }, [])
 
-    if (!user && done) {
+    if (!user) {
         return <Redirect href="/(auth)/login" />;
     } else {
         return <Redirect href="/(tabs)" />;

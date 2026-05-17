@@ -67,7 +67,7 @@ export default function ExerciseDetailsScreen() {
           <ViewHighlighter style={styles.infoBlock}>
             <View style={styles.infoHeader}>
               <IconSymbol name="figure.strengthtraining.traditional" size={20} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold" style={styles.infoTitle}>Target Muscles</ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.infoTitle}>Цільові мʼязи</ThemedText>
             </View>
             <View style={styles.tagsContainer}>
               {
@@ -86,7 +86,7 @@ export default function ExerciseDetailsScreen() {
           <ViewHighlighter style={styles.infoBlock}>
             <View style={styles.infoHeader}>
               <IconSymbol name="list.bullet.clipboard" size={20} color="#FF5F1F" />
-              <ThemedText type="defaultSemiBold" style={styles.infoTitle}>Instructions</ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.infoTitle}>Інструкціі до виконання</ThemedText>
             </View>
             <ThemedText style={styles.instructionsText}>
               {exercise.instructions}

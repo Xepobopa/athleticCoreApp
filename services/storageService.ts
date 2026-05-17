@@ -37,6 +37,9 @@ const test_diary: kcalCalendarType = {
     protein: 123,
     carb: 123,
     fat: 123,
+    salt: 6,
+    water: 3500,
+    fiber: 35
   },
   breakfast: [MOCK_MEAL[0], MOCK_MEAL[1]],
   dinner: [],
@@ -48,6 +51,9 @@ const test_kcal_target: Calories =  {
     protein: 160,
     carb: 280,
     fat: 70,
+    salt: 6,
+    water: 3500,
+    fiber: 35
 }
 
 // one time add mock users to the storage
